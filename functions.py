@@ -42,7 +42,7 @@ def get_by_skill(skill_name):
     for candidate in load_candidates():
         skills = candidate["skills"].split(", ")
         for skill in skills:
-            if skill_name == skill:
+            if skill_name.lower() == skill:
                 list_candidates.append(candidate)
                 break
 
