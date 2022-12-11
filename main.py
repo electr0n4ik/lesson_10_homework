@@ -5,42 +5,72 @@ import json
 app = Flask(__name__)
 
 @app.route("/candidates/<x>")
-
 def candidate_page(x):
     x = int(x)
-    url_male = "https://winaero.com/blog/wp-content/uploads/2018/08/Windows-10-user-icon-big.png"
-    url_female = ""
+    url_male = "https://cdn-icons-png.flaticon.com/512/432/432693.png"
+    url_female = "https://cdn-icons-png.flaticon.com/512/554/554857.png"
     for candidate in get_all():
 
         if x == candidate["pk"]:
-            return f"""
-            <img src={url}>
-            
-            <pre>
-            Имя кандидата - {get_by_pk(x)["name"]}
-            Позиция кандидата {get_by_pk(x)["pk"]}
-            Навыки через запятую {get_by_pk(x)["skills"]}
-            </pre>"""
+            if candidate["gender"] == "male":
+                url = url_male
+                return f"""
+    <img src={url}>
+    
+    <pre>
+    Имя кандидата - {get_by_pk(x)["name"]}
+    Позиция кандидата {get_by_pk(x)["pk"]}
+    Навыки через запятую {get_by_pk(x)["skills"]}
+    </pre>"""
+            else:
+                url = url_female
+                return f"""
+    <img src={url}>
+    
+    <pre>
+    Имя кандидата - {get_by_pk(x)["name"]}
+    Позиция кандидата {get_by_pk(x)["pk"]}
+    Навыки через запятую {get_by_pk(x)["skills"]}
+    </pre>"""
 
     return f"<h1>Такого кандидата не существует!</h1>"
 
 
 @app.route("/")
-
 def main_page():
     result = []
-    candidates = load_candidates()
 
-    for i in candidates:
+    for i in get_all():
         text = f"""
-        Имя кандидата - {i["name"]}
-        Позиция кандидата {i["pk"]}
-        Навыки через запятую {i["skills"]}
-        """
+    Имя кандидата - {i["name"]}
+    Позиция кандидата {i["pk"]}
+    Навыки через запятую {i["skills"]}
+    """
         result.append(text)
     result = '\n'.join(result)
     return f"""<pre>
     {result}
     </pre>"""
+
+
+@app.route("/skills/<x>")
+def skills_page(x):
+    result = []
+    if len(get_by_skill(x)) == 0:
+        return f"<h1>Такого кандидата не существует!</h1>"
+    else:
+        for candidate in get_by_skill(x):
+            text = f"""
+        Имя кандидата - {candidate["name"]}
+        Позиция кандидата {candidate["pk"]}
+        Навыки через запятую {candidate["skills"]}
+        """
+            result.append(text)
+        result = '\n'.join(result)
+
+        return f"""<pre>
+            {result}
+            </pre>"""
+
 
 app.run()

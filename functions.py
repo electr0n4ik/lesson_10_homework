@@ -22,11 +22,13 @@ def get_by_pk(pk):
 
 # 4
 def get_by_skill(skill_name):
-    candidates = load_candidates()
     list_candidates = []
+    for candidate in load_candidates():
+        skills = candidate["skills"].split(", ")
 
-    for candidate in candidates:
-        if skill_name == candidate["skills"]:
-            list_candidates.append(candidate["skills"])
+        for skill in skills:
+            if skill_name == skill:
+                list_candidates.append(candidate)
+                break
 
     return list_candidates
